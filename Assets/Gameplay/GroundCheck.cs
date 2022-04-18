@@ -1,0 +1,127 @@
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+//Originally from AssetFactory
+namespace TakoStories
+{
+	public class GroundCheck : CollisionCheck
+	{
+		[Header("Check")]
+		[SerializeField] private float checkHeight = 0.2f;
+		[SerializeField] private float coyoteTime = 0.3f;
+		[SerializeField] private float lockDuration = 0.3f;
+		[SerializeField] private float horizontalOffset = 0.3f;
+		[Space]
+		[SerializeField] private CapsuleCollider2D capsule;
+#if UNITY_EDITOR
+		[Header("Editor")]
+		[SerializeField] private bool gizmos;
+#endif
+
+		private Rigidbody2D rb;
+
+		public bool IsGrounded { get; private set; }
+		public BufferedBoolean IsGroundedBuffer { get; private set; }
+
+		public bool IsLocked => lockTime < lockDuration;
+
+		private float lockTime = 0f;
+
+		private float VerticalOffset
+		{
+			get
+			{
+				Vector2 hSize = HalfSize;
+				float ret = hSize.y - hSize.x;
+				ret += Mathf.Sqrt((hSize.x * hSize.x) - (horizontalOffset * horizontalOffset));
+				return ret;
+			}
+		}
+		private Vector2 Center => (Vector2)transform.position + capsule.offset;
+		private Vector2 HalfSize => capsule.size * 0.5f;
+
+		private void Start()
+		{
+			if (capsule == null)
+			{
+				capsule = GetComponentInChildren<CapsuleCollider2D>();
+			}
+			rb = GetComponent<Rigidbody2D>();
+			IsGroundedBuffer = new BufferedBoolean(coyoteTime);
+		}
+
+		private void FixedUpdate()
+		{
+			lockTime += Time.fixedDeltaTime;
+			if (IsLocked) return;
+
+			CheckGround();
+		}
+		private void CheckGround()
+		{
+			RaycastHit2D rch = CastGround(mask);
+			if (rch.collider != null)
+			{
+				IsGrounded = true;
+				IsGroundedBuffer.Buffer(true);
+			}
+			else
+			{
+				IsGrounded = false;
+			}
+		}
+		public RaycastHit2D CastGround(LayerMask mask)
+		{
+			Vector2 pos = Center - ((VerticalOffset + checkHeight * 0.5f) * (Vector2)transform.up);
+
+			Vector2 size = new Vector2(horizontalOffset * 2f, checkHeight);
+			return Physics2D.BoxCast(pos, size, rb.rotation, -transform.up, 0f, mask);
+		}
+		public void Lock()
+		{
+			lockTime = 0f;
+			IsGroundedBuffer.Reset();
+			IsGrounded = false;
+		}
+
+#if UNITY_EDITOR
+		private void OnDrawGizmos()
+		{
+			if (capsule == null)
+				Draw(GetComponent<CapsuleCollider2D>());
+			else
+				Draw(capsule);
+		}
+		void Draw(CapsuleCollider2D capsule)
+		{
+			Color color;
+
+			Vector2 pos = Center;
+
+			if (gizmos)
+			{
+				if (Application.isPlaying)
+					color = IsGrounded ? Color.green : IsGroundedBuffer ? Color.cyan : IsLocked ? Color.gray : Color.red;
+				else
+					color = Color.cyan;
+				float verticalOffset = VerticalOffset;
+
+				Vector2 down = -transform.up;
+				Vector2 bottom = down * verticalOffset;
+				Vector2 bottomCheck = down * (verticalOffset + checkHeight);
+				Vector2 right = transform.right * horizontalOffset;
+
+				Vector2 tl = pos - right + bottom;
+				Vector2 tr = pos + right + bottom;
+
+				Vector2 bl = pos - right + bottomCheck;
+				Vector2 br = pos + right + bottomCheck;
+
+				Debug.DrawLine(tl, bl, color);
+				Debug.DrawLine(tr, br, color);
+			}
+		}
+#endif
+	}
+}

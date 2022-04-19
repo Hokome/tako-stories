@@ -2604,7 +2604,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7382770378253888005, guid: 49573601f5cef3e4188626d8d1bdc34b, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
-      value: AssetFactory.UI.MenuManager, Assembly-CSharp
+      value: TakoStories.UI.MenuManager, Assembly-CSharp
       objectReference: {fileID: 0}
     - target: {fileID: 7382770378253888005, guid: 49573601f5cef3e4188626d8d1bdc34b, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgument
@@ -2616,7 +2616,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7382770378253888005, guid: 49573601f5cef3e4188626d8d1bdc34b, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
-      value: AssetFactory.UI.Menu, Assembly-CSharp
+      value: TakoStories.UI.Menu, Assembly-CSharp
       objectReference: {fileID: 0}
     - target: {fileID: 7382770378253888007, guid: 49573601f5cef3e4188626d8d1bdc34b, type: 3}
       propertyPath: m_Name
@@ -5261,7 +5261,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7382770378253888005, guid: 49573601f5cef3e4188626d8d1bdc34b, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
-      value: AssetFactory.UI.MenuManager, Assembly-CSharp
+      value: TakoStories.UI.MenuManager, Assembly-CSharp
       objectReference: {fileID: 0}
     - target: {fileID: 7382770378253888005, guid: 49573601f5cef3e4188626d8d1bdc34b, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgument
@@ -5269,7 +5269,7 @@ PrefabInstance:
       objectReference: {fileID: 758459060}
     - target: {fileID: 7382770378253888005, guid: 49573601f5cef3e4188626d8d1bdc34b, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
-      value: AssetFactory.UI.Menu, Assembly-CSharp
+      value: TakoStories.UI.Menu, Assembly-CSharp
       objectReference: {fileID: 0}
     - target: {fileID: 7382770378253888007, guid: 49573601f5cef3e4188626d8d1bdc34b, type: 3}
       propertyPath: m_Name

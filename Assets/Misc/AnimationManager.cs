@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 
 //Originally from AssetFactory
-namespace ShieldRider
+namespace TakoStories
 {
 	public class AnimationManager : MonoBehaviour
 	{

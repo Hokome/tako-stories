@@ -11,7 +11,8 @@ namespace TakoStories.Commands
 			Command[] list = new Command[]
 			{
 				new LogCommand(),
-				new TimeScaleCommand()
+				new TimeScaleCommand(),
+				new ResetCommand()
 			};
 			CommandPrompt.commands = new System.Collections.Generic.Dictionary<string, Command>(list.Length);
 			foreach (var c in list)
@@ -49,6 +50,18 @@ namespace TakoStories.Commands
 		protected override void Execute(string[] args)
 		{
 			Debug.Log(args[1]);
+		}
+	}
+	public class ResetCommand : Command
+	{
+		public override string Key => "reset";
+
+		protected override int MinArgs => 0;
+
+		protected override void Execute(string[] args)
+		{
+			if (Player.Exists)
+				Player.Inst.Respawn();
 		}
 	}
 	public class TimeScaleCommand : Command

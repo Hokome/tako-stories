@@ -8,13 +8,15 @@ namespace TakoStories
 	public class GameManager : MonoSingleton<GameManager>
 	{
 		public static CinemachineBrain CameraBrain { get; private set; }
+		public static Camera Camera { get; private set; }
 
 		[SerializeField] private CinemachineVirtualCamera startCamera;
 
 		protected override void Awake()
 		{
 			base.Awake();
-			CameraBrain = Camera.main.GetComponent<CinemachineBrain>();
+			Camera = Camera.main;
+			CameraBrain = Camera.GetComponent<CinemachineBrain>();
 		}
 
 		public static void ResetCamera() => SwitchCamera(Inst.startCamera);

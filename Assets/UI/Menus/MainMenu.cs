@@ -52,7 +52,6 @@ namespace TakoStories
 		{
 			base.OnEnable();
 			Cursor.visible = true;
-			Cursor.lockState = CursorLockMode.None;
 			ToMain();
 		}
 
@@ -60,7 +59,6 @@ namespace TakoStories
 		{
 			base.OnDisable();
 			Cursor.visible = false;
-			Cursor.lockState = CursorLockMode.Locked;
 			currentMenu.Display(false);
 		}
 	}

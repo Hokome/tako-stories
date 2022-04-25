@@ -5,20 +5,37 @@ using UnityEngine;
 
 namespace TakoStories
 {
-	[RequireComponent(typeof(Collider2D))]
 	public class CameraSwitch : MonoBehaviour
 	{
-		[SerializeField] private CinemachineVirtualCamera transitionTo;
+		private CinemachineVirtualCamera cam;
+		//private bool activated;
+		//Vector2 min;
+		//Vector2 max;
 
-		private void OnTriggerEnter2D(Collider2D collision)
+		private void Start()
 		{
-			if (collision.CompareTag("Player"))
-			{
-				if (transitionTo != null)
-					GameManager.SwitchCamera(transitionTo);
-				else
-					GameManager.ResetCamera();
-			}
+			cam = GetComponent<CinemachineVirtualCamera>();
+			//float h = GameManager.Camera.orthographicSize;
+			//Vector2 hsize = new Vector2(h * GameManager.Camera.aspect, h);
+			//Vector2 pos = transform.position;
+			//min = pos - hsize;
+			//max = pos + hsize;
+		}
+
+		//private void Update()
+		//{
+		//	if (activated)
+		//	{
+		//		Vector2 player = Player.Inst.transform.position;
+		//	}
+		//}
+
+		public void SetCamera(bool v)
+		{
+			if (v)
+				GameManager.SwitchCamera(cam);
+			else
+				GameManager.ResetCamera();
 		}
 	}
 }

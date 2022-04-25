@@ -1,0 +1,11 @@
+title: Test
+tags: 
+colorID: 1
+position: 700,231
+---
+This is a test line.
+<<setchar Ina'nis>>
+Now with a character
+<<setchar NONE>>
+And now without
+===

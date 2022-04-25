@@ -12,7 +12,8 @@ namespace TakoStories.Commands
 			{
 				new LogCommand(),
 				new TimeScaleCommand(),
-				new ResetCommand()
+				new ResetCommand(),
+				new FlyCommand()
 			};
 			CommandPrompt.commands = new System.Collections.Generic.Dictionary<string, Command>(list.Length);
 			foreach (var c in list)
@@ -62,6 +63,18 @@ namespace TakoStories.Commands
 		{
 			if (Player.Exists)
 				Player.Inst.Respawn();
+		}
+	}
+
+	public class FlyCommand : Command
+	{
+		public override string Key => "fly";
+
+		protected override int MinArgs => 0;
+
+		protected override void Execute(string[] args)
+		{
+			Player.Inst.FlyMode = !Player.Inst.FlyMode;
 		}
 	}
 	public class TimeScaleCommand : Command

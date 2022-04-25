@@ -14,6 +14,7 @@ GameObject:
   - component: {fileID: 8900661538642785286}
   - component: {fileID: 8900661538642785287}
   - component: {fileID: 8900661538642785285}
+  - component: {fileID: 5029440683837319897}
   m_Layer: 6
   m_Name: Moving Object
   m_TagString: Untagged
@@ -164,3 +165,30 @@ MonoBehaviour:
   destination: {x: 0, y: 5}
   speed: 10
   activated: 0
+--- !u!114 &5029440683837319897
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8900661538642785400}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7747f0cf0ae332a49a538e51b58bbbf7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  onReset:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 5029440683837319897}
+        m_TargetAssemblyTypeName: TakoStories.Resettable, Assembly-CSharp
+        m_MethodName: ResetPosition
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2

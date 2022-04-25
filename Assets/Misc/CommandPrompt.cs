@@ -48,6 +48,10 @@ namespace TakoStories.Commands
 				if (Keyboard.current.f3Key.wasPressedThisFrame)
 					Activated = !Activated;
 			}
+			if (Activated && Keyboard.current.enterKey.wasPressedThisFrame)
+			{
+				ExecuteCommand(commandText);
+			}
 		}
 
 		private const int FIELD_HEIGHT = 25;

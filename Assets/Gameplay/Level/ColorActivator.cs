@@ -20,7 +20,7 @@ namespace TakoStories
 			private set => spriteRenderer = value;
 		}
 
-		public bool Activated
+		public virtual bool Activated
 		{
 			set
 			{
@@ -28,7 +28,7 @@ namespace TakoStories
 			}
 		}
 
-		private void Start()
+		protected virtual void Start()
 		{
 			Activated = false;
 		}

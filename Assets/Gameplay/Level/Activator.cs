@@ -15,7 +15,7 @@ namespace TakoStories
 		public virtual bool Activated
 		{
 			get => activated;
-			protected set
+			set
 			{
 				if (activated == value) return;
 

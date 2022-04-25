@@ -15,6 +15,8 @@ GameObject:
   - component: {fileID: 815976286909234671}
   - component: {fileID: 815976286909234666}
   - component: {fileID: 815976286909234667}
+  - component: {fileID: -6124249453578323395}
+  - component: {fileID: 8883790159908254261}
   m_Layer: 7
   m_Name: Draggable block
   m_TagString: Untagged
@@ -128,7 +130,7 @@ Rigidbody2D:
   m_Simulated: 1
   m_UseFullKinematicContacts: 0
   m_UseAutoMass: 0
-  m_Mass: 200
+  m_Mass: 150
   m_LinearDrag: 1
   m_AngularDrag: 1
   m_GravityScale: 1
@@ -208,8 +210,65 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0a924408d6665c04590aaaf3c5729c16, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  force: 4000
   disableGravity: 1
+--- !u!114 &-6124249453578323395
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 815976286909234668}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7747f0cf0ae332a49a538e51b58bbbf7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  onReset:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: -6124249453578323395}
+        m_TargetAssemblyTypeName: TakoStories.Resettable, Assembly-CSharp
+        m_MethodName: ResetPosition
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 815976286909234667}
+        m_TargetAssemblyTypeName: TakoStories.Draggable, Assembly-CSharp
+        m_MethodName: ResetVelocity
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+--- !u!257 &8883790159908254261
+TargetJoint2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 815976286909234668}
+  m_Enabled: 0
+  serializedVersion: 4
+  m_EnableCollision: 1
+  m_ConnectedRigidBody: {fileID: 0}
+  m_BreakForce: Infinity
+  m_BreakTorque: Infinity
+  m_Anchor: {x: 0, y: 0}
+  m_Target: {x: 0, y: 0}
+  m_AutoConfigureTarget: 0
+  m_MaxForce: 10000
+  m_DampingRatio: 1
+  m_Frequency: 5
 --- !u!1 &815976287681803100
 GameObject:
   m_ObjectHideFlags: 0

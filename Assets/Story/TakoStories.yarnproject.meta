@@ -1,0 +1,27 @@
+fileFormatVersion: 2
+guid: 979aa9dc3a709fd4c93bcf8a01653fec
+ScriptedImporter:
+  internalIDToNameTable: []
+  externalObjects: {}
+  serializedVersion: 2
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+  script: {fileID: 11500000, guid: 053561912b1654d80a424bb0696a74ae, type: 3}
+  sourceScripts:
+  - {fileID: 6391573757903218779, guid: ca331759ccfd9cd4aa6c82cf7cb2edd0, type: 3}
+  compileErrors: []
+  serializedDeclarations:
+  - name: $dummy
+    typeName: Bool
+    defaultValueBool: 0
+    defaultValueNumber: 0
+    defaultValueString: 
+    description: 
+    isImplicit: 0
+    sourceYarnAsset: {instanceID: 0}
+  defaultLanguage: en
+  languagesToSourceAssets: []
+  useAddressableAssets: 0
+  searchAllAssembliesForActions: 1
+  assembliesToSearch: []

@@ -5,7 +5,7 @@ using System.Linq;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-using InputCallback = UnityEngine.InputSystem.InputAction.CallbackContext;
+using InputContext = UnityEngine.InputSystem.InputAction.CallbackContext;
 
 namespace TakoStories
 {
@@ -28,10 +28,34 @@ namespace TakoStories
 		[SerializeField] [Delayed] private float jumpBufferTime;
 		[Header("Misc")]
 		[SerializeField] private PuzzleCursor cursor;
+		[SerializeField] private bool flyMode;
 
-		private PlayerInput input;
+		[HideInInspector] public List<Tako> takos;
 
-		private BufferedBoolean jumpInput;
+		private Rigidbody2D rb;
+		public Rigidbody2D Rb
+		{
+			get
+			{
+				if (rb == null)
+					rb = GetComponent<Rigidbody2D>();
+				return rb;
+			}
+			private set => rb = value;
+		}
+		private GroundCheck gc;
+		public GroundCheck Gc
+		{
+			get
+			{
+				if (gc == null)
+					gc = GetComponent<GroundCheck>();
+				return gc;
+			}
+			private set => gc = value;
+		}
+
+		public Checkpoint Checkpoint { get; set; }
 
 		private bool jumping;
 		private bool Jumping
@@ -43,11 +67,45 @@ namespace TakoStories
 				jumpTime = Time.time;
 			}
 		}
-		public float MoveInput { get; private set; }
-		public Rigidbody2D Rb { get; private set; }
-		public GroundCheck Gc { get; private set; }
 
 		private float jumpTime = float.NegativeInfinity;
+
+		public bool FlyMode
+		{
+			get => flyMode;
+			set
+			{
+				flyMode = value;
+				if (Application.isPlaying)
+				{
+					if (value)
+					{
+						Rb.constraints = RigidbodyConstraints2D.FreezeAll;
+						Rb.gravityScale = 0f;
+					}
+					else
+					{
+						Rb.constraints = RigidbodyConstraints2D.FreezeRotation;
+						Rb.gravityScale = 1f;
+					}
+				}
+			}
+		}
+
+		public bool Frozen
+		{
+			get => frozen; 
+			set
+			{
+				if (value)
+				{
+					cursor.DragEnabled = false;
+					cursor.PowerEnabled = false;
+				}
+				frozen = value;
+			}
+		}
+
 
 		#region Messages
 		protected override void Awake()
@@ -59,9 +117,8 @@ namespace TakoStories
 		}
 		private void Start()
 		{
-			Rb = GetComponent<Rigidbody2D>();
-			Gc = GetComponent<GroundCheck>();
 			cursor = Instantiate(cursor);
+			FlyMode = FlyMode;
 		}
 		private void OnEnable()
 		{
@@ -73,29 +130,37 @@ namespace TakoStories
 		}
 		private void FixedUpdate()
 		{
-			DebugEx.SetElement(0, Rb.velocity);
+			//DebugEx.SetElement(0, Rb.velocity);
 			if (PauseMenu.IsPaused) return;
-
-			if (jumpInput) Jump();
-
-			if (!Gc.IsGrounded)
+			if (Frozen)
 			{
-				float jumpCurveX = (Time.time - jumpTime) / jumpCurveGraphScale.x;
-				if (jumpCurveX < 1f)
-					Rb.gravityScale = jumpGravityCurve.Evaluate(jumpCurveX) * jumpCurveGraphScale.y;
+				if (Gc.IsGrounded)
+					rb.velocity *= Vector2.up;
+				return;
+			}
+
+			if (flyMode)
+			{
+				transform.position += Time.fixedDeltaTime * maxSpeed * (Vector3)MoveInput;
+			}
+			else
+			{
+				if (jumpInput) Jump();
+
+				if (!Gc.IsGrounded)
+				{
+					float jumpCurveX = (Time.time - jumpTime) / jumpCurveGraphScale.x;
+					if (jumpCurveX < 1f)
+						Rb.gravityScale = jumpGravityCurve.Evaluate(jumpCurveX) * jumpCurveGraphScale.y;
+				}
 			}
 
 			Move();
 		}
-		private void Update()
-		{
-			if (PauseMenu.IsPaused) return;
-			Vector2 cursorPos = GameManager.Camera.ScreenToWorldPoint(Mouse.current.position.ReadValue());
-			cursor.transform.position = cursorPos;
-		}
 		private void OnValidate()
 		{
 			jumpInput = new BufferedBoolean(jumpBufferTime);
+			FlyMode = FlyMode;
 		}
 		#endregion
 		private void Jump()
@@ -114,7 +179,7 @@ namespace TakoStories
 		private void Move()
 		{
 			float force = 1f;
-			if (MoveInput == 0f)
+			if (MoveInput.x == 0f)
 			{
 				if (Gc.IsGrounded)
 				{
@@ -132,65 +197,86 @@ namespace TakoStories
 				if (MathEx.MaxSpeed(Rb.velocity, maxSpeed * MoveInput * Vector2.right))
 				{
 					force *= acceleration;
-					Rb.AddForce(new Vector2(MoveInput * force, 0f));
+					Rb.AddForce(new Vector2(MoveInput.x * force, 0f));
 				}
 			}
 		}
 
 		public void Respawn()
 		{
-			transform.position = Vector3.zero;
-			GameManager.ResetCamera();
+			transform.position = Checkpoint.SpawnPoint;
+			Rb.velocity = Vector2.zero;
+			cursor.ResetPosition();
 		}
 
 		#region Input
-		private delegate void InputHandler(InputCallback ctx);
+		private delegate void InputHandler(InputContext ctx);
 		private Dictionary<InputAction, InputHandler> actionHandlers;
+		private PlayerInput input;
+
+		private BufferedBoolean jumpInput;
+		private bool frozen;
+
+		public Vector2 MoveInput { get; private set; }
 
 		private void InitializeInput()
 		{
 			input = GetComponent<PlayerInput>();
 
-			actionHandlers = new Dictionary<InputAction, InputHandler>(8);
-			InputAction action;
+			actionHandlers = new Dictionary<InputAction, InputHandler>()
+			{
+				{ input.actions.FindAction("Move"), OnMove  },
+				{ input.actions.FindAction("Jump"), OnJump  },
+				{ input.actions.FindAction("Drag"), OnDrag  },
+				{ input.actions.FindAction("Power"), OnPower  },
+				{ input.actions.FindAction("Recall"), OnRecall  },
+				{ input.actions.FindAction("Reset"), OnReset  },
+				{ input.actions.FindAction("Pause"), OnPause  }
 
-			action = input.actions.FindAction("Move");
-			actionHandlers.Add(action, Move);
-
-			action = input.actions.FindAction("Jump");
-			actionHandlers.Add(action, Jump);
-
-			action = input.actions.FindAction("Click");
-			actionHandlers.Add(action, Click);
-
-			action = input.actions.FindAction("Pause");
-			actionHandlers.Add(action, Pause);
+			};
 		}
-		private void ReadInput(InputCallback ctx)
+		private void ReadInput(InputContext ctx)
 		{
 			if (actionHandlers.TryGetValue(ctx.action, out InputHandler ih))
 				ih(ctx);
 		}
-		private void Move(InputCallback ctx)
+		private void OnMove(InputContext ctx)
 		{
-			MoveInput = ctx.ReadValue<float>();
-			MoveInput = Mathf.Clamp(MoveInput, -1f, 1f);
+			MoveInput = ctx.ReadValue<Vector2>();
+			MoveInput = Vector2.ClampMagnitude(MoveInput, 1f);
 		}
-		private void Jump(InputCallback ctx)
+		private void OnJump(InputContext ctx)
 		{
 			if (ctx.performed)
 			{
 				jumpInput.Buffer(true);
 			}
 		}
-		private void Click(InputCallback ctx)
+		private void OnDrag(InputContext ctx)
 		{
 			if (ctx.performed)
-				cursor.Activated = true;
+				cursor.DragEnabled = true;
 			if (ctx.canceled)
-				cursor.Activated = false;
+				cursor.DragEnabled = false;
 		}
-		private void Pause(InputCallback ctx)
+		private void OnPower(InputContext ctx)
+		{
+			if (ctx.performed)
+				cursor.PowerEnabled = true;
+			if (ctx.canceled)
+				cursor.PowerEnabled = false;
+		}
+		private void OnRecall(InputContext ctx)
+		{
+			if (ctx.performed)
+				takos.ForEach(t => t.transform.position = transform.position);
+		}
+		private void OnReset(InputContext ctx)
+		{
+			if (ctx.performed)
+				GameManager.Inst.ResetPuzzle();
+		}
+		private void OnPause(InputContext ctx)
 		{
 			if (!ctx.performed) return;
 			PauseMenu.Inst.TogglePauseMenu();

@@ -5,6 +5,7 @@ TagManager:
   serializedVersion: 2
   tags:
   - Cursor
+  - Draggable
   layers:
   - Default
   - TransparentFX
@@ -13,11 +14,11 @@ TagManager:
   - Water
   - UI
   - Terrain
-  - Block
-  - Block Barrier
-  - Cursor
-  - Cursor Barrier
-  - Tako
+  - 
+  - 
+  - 
+  - 
+  - 
   - 
   - 
   - 

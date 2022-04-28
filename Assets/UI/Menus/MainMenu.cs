@@ -51,14 +51,14 @@ namespace TakoStories
 		protected override void OnEnable()
 		{
 			base.OnEnable();
-			Cursor.visible = true;
+			//Cursor.visible = true;
 			ToMain();
 		}
 
 		protected override void OnDisable()
 		{
 			base.OnDisable();
-			Cursor.visible = false;
+			//Cursor.visible = false;
 			currentMenu.Display(false);
 		}
 	}

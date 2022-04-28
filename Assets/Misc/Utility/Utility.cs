@@ -12,7 +12,8 @@ namespace TakoStories
 		{
 			GUIUtility.systemCopyBuffer = text;
 		}
-		public static bool IsInLayerMask(int layer, LayerMask mask) => (mask.value & (1 << layer)) > 0;
+
+		public static bool CheckLayer(this LayerMask mask, int layer) => (mask.value & (1 << layer)) != 0;
 
 		public static Coroutine DelayCall(this MonoBehaviour m, Action action, float delay)
 		{

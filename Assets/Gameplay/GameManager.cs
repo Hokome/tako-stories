@@ -11,9 +11,10 @@ namespace TakoStories
 		public static Camera Camera { get; private set; }
 
 		[SerializeField] private Player player;
-		[SerializeField] private CinemachineVirtualCamera playerCamera;
+		[SerializeField] private LevelScreen levelScreen;
+		[SerializeField] private Checkpoint firstCheckpoint;
 
-		[HideInInspector] public List<Resettable> resettables = new List<Resettable>();
+		//[HideInInspector] public List<Resettable> resettables = new List<Resettable>();
 
 		protected override void Awake()
 		{
@@ -22,23 +23,30 @@ namespace TakoStories
 			CameraBrain = Camera.GetComponent<CinemachineBrain>();
 
 			player = Instantiate(player);
-			playerCamera = Instantiate(playerCamera);
-			playerCamera.Follow = player.transform;
+			player.Checkpoint = firstCheckpoint;
+			player.transform.position = firstCheckpoint.SpawnPoint;
+			SwitchScreen(levelScreen);
+			//playerCamera = Instantiate(playerCamera);
+			//playerCamera.Follow = player.transform;
 		}
-
-		public static void ResetCamera() => SwitchCamera(Inst.playerCamera);
-		public static void SwitchCamera(CinemachineVirtualCamera newCamera)
+		public void SwitchScreen(LevelScreen newScreen)
 		{
-			CameraBrain.ActiveVirtualCamera.Priority = 0;
-			newCamera.Priority = 1;
+			if (levelScreen != null)
+			{
+				levelScreen.Cam.Priority = 0;
+				//levelScreen.gameObject.SetActive(false);
+			}
+			levelScreen = newScreen;
+			//newScreen.gameObject.SetActive(true);
+			newScreen.Cam.Priority = 1;
 		}
 		public void LoadLevel(int level)
 		{
 			SceneTransitioner.Inst.LoadScene(level);
 		}
-		public void ResetPuzzle()
-		{
-			resettables.ForEach(r => r.ResetObject());
-		}
+		//public void ResetPuzzle()
+		//{
+		//	resettables.ForEach(r => r.ResetObject());
+		//}
 	}
 }

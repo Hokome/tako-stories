@@ -13,7 +13,7 @@ namespace TakoStories
 		/// <summary>
 		/// Will return true if the time is stopped
 		/// </summary>
-		public static bool IsPaused => Inst.TimeStopped;
+		public static bool IsPaused => Inst != null && Inst.TimeStopped;
 
 		[Delayed]
 		[SerializeField] private float timeScale = 1f;
